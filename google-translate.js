@@ -29,7 +29,7 @@ function parseMp3(data) {
 
 // query one word
 function query (word) {
-  let options = google_translate_option
+  let options = utils.deepClone(google_translate_option)
   word = word.replace(/\s|[_]/g, ' ')
   options.path = '/translate_a/single?client=t&sl=en&tl=zh-CN&hl=en&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=btn&rom=1&srcrom=1&ssel=3&tsel=6&kc=0' + tk(word) + '&q=' + encodeURIComponent(word)
   return new Promise ((resolve, reject) => {
@@ -43,7 +43,7 @@ function query (word) {
 
 // speak one word prounciation
 function speak (word, tl) {
-  let options = google_translate_option
+  let options = utils.deepClone(google_translate_option)
   if(!tl) tl = 'en'
   word = word.replace(/\s|[_]/g, ' ')
   // console.log(word)

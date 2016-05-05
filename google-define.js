@@ -19,7 +19,7 @@ let google_option = {
 
 function query (word) {
 	// TODO: 是否需要深度拷贝
-	let option = google_option
+	let option = utils.deepClone(google_option)
 	// option.path = `/search?q=define%3Asecret&hl=en&ie=UTF-8&oe=UTF-8&num=1&start=0`
 	option.path = `/search?num=1&start=0&hl=en&fp=1&q=define%3A${encodeURIComponent(word)}`
 	return new Promise ( (resolve, reject) => {
@@ -29,7 +29,7 @@ function query (word) {
 	})
 }
 
-query('class').then((a)=>{
+query('mentor').then((a)=>{
 	const writeStream = fs.createWriteStream(`${a[1]}.html`)
 	writeStream.write(utils.parseJEAPI(a[0].toString()), (e) => {
 		e && console.log(e)

@@ -250,7 +250,8 @@ var lM = function(a) {
     })
   })
 }
-, deepClone = function () {
+, deepClone = function (o) {
+  return JSON.parse(JSON.stringify(o))
 }
 
 module.exports = {
