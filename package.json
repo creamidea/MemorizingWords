@@ -1,0 +1,11 @@
+{
+  "name": "google-pronunciation-downloader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "google-translate.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "creamidea@gmail.com",
+  "license": "MIT"
+}

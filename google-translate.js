@@ -1,17 +1,16 @@
 "use strict"
 // google translate tools
-
-const http = require('http'),
-      https = require('https'),
-      fs = require('fs'),
+// Download and save google translate pronunciation
+const fs = require('fs'),
       EventEmitter = require('events'),
-      execOld = require('child_process').exec,
       utils = require('./goog-utils.js'),
       tk = utils.rM,
       resParser = utils.TK,
+      request = utils.request,
+      exec = utils.exec,
       HOSTNAME = "translate.google.cn",
       PORT = 80,
-      USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36',
+      USER_AGENT = utils.USER_AGENT,
       args = process.argv
 
 let google_translate_option = {
@@ -28,50 +27,12 @@ function parseMp3(data) {
   console.log(header)
 }
 
-// Wrap the origin exec to the Promise
-function exec(command) {
-  return new Promise((resolve, reject) => {
-    execOld(command, function(err, stdout, stderr) {
-      if (err!==null) {
-        console.log(`exec error: ${err}`)
-        reject(err)
-      } else {
-        resolve()
-      }
-    })
-  })
-}
-
-function request(options) {
-  // console.log(options)
-  return new Promise( (resolve, reject) => {
-    let req = http.request(options, (res) => {
-      // console.log(`> ${options.path} ${res.statusCode}`)
-      let chunks = [], size = 0
-      res.on('data', (chunk) => {
-        chunks.push(chunk)
-        size += chunk.length
-      })
-      res.on('end', () => {
-        resolve(Buffer.concat(chunks, size))
-      })
-    })
-    req.on('error', (e) => {
-      if (e) {
-        console.log(`problem with request: ${e.message}`)
-        reject(e) 
-      }
-    })
-    req.end()
-  })
-}
-
 // query one word
 function query (word) {
   let options = google_translate_option
   word = word.replace(/\s|[_]/g, ' ')
   options.path = '/translate_a/single?client=t&sl=en&tl=zh-CN&hl=en&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=btn&rom=1&srcrom=1&ssel=3&tsel=6&kc=0' + tk(word) + '&q=' + encodeURIComponent(word)
-  return new Promise ( (resolve, reject) => {
+  return new Promise ((resolve, reject) => {
     request(options).then( (data) => {
       resolve(data)
     }).catch((e) => {
@@ -163,15 +124,36 @@ function savePronunciation2 (filename) {
   })
 }
 
+// parse the content of the specify file
+function parseFileContent(filename) {
+  var content = fs.readFileSync(filename),
+      words = []
+  try {
+    words = JSON.parse(content.toString())
+  } catch (err) {
+    if (err instanceof SyntaxError) {
+      words = content.toString().split(/\r?\n/)
+    } else {
+      throw err
+    }
+  }
+  return words
+}
+
 function savePronunciation (filename) {
   const writeStream = fs.createWriteStream(`${filename.split('.')[0]}.mp3`),
         writeEvent = new EventEmitter(),
-        words = JSON.parse(fs.readFileSync(filename).toString()),
+        words = parseFileContent(filename),
         wordsCount = words.length
   let buffer = [],
         size = 0
   
   function writePronunciation (word) {
+    // exclude the null string
+    if (typeof word !== 'string' || word === '') {
+      writeEvent.emit('write-end')
+      return
+    }
     speak(word).then((data) => {
       buffer.push(data)
       size += data.length
@@ -187,17 +169,19 @@ function savePronunciation (filename) {
         })
       })
     }).catch((e) =>{
-      console.log('Speak Error: ' + e)
+      console.log('Speaking Error: ' + e)
     });
   }
   writeEvent.on('write-end', () => {
     if (words.length > 0) {
       writePronunciation(words.shift())
     } else {
-      writeStream.write(Buffer.concat(buffer, size))
-      writeEvent.unbind('write-end')
-      process.nextTick(() => {
-        writeStream.end()
+      writeStream.write(Buffer.concat(buffer, size), (e) => {
+        e && console.log(e)
+        writeEvent.removeListener('write-end', () => {})
+        process.nextTick(() => {
+          writeStream.end()
+        })
       })
     }
   });
@@ -211,8 +195,8 @@ if (args.length === 3) {
   console.log(message)
 }
 
-// speak('hello world').then((data) => {console.log(data)})
 
+// speak('hello world').then((data) => {console.log(data)})
 
 // 11111111111
 // 10 MPEG-2
@@ -228,12 +212,8 @@ if (args.length === 3) {
 // 1 Original media
 // 00 none
 
-
 // 3,840 bytes
-
 // 8 * 4 = 32 bytes -> header
 // 16 -> crc
-
 // 3792 bytes -> audio data
-
 // 192 FrameSize
