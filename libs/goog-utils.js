@@ -72,6 +72,7 @@ var lM = function(a) {
 }
 , TK = function(a) {
   // console.log('>>>>>>>>', a.toString())
+  console.log('>>> ', eval(Pb + a + Ub))
   return eval(Pb + a + Ub)
 }
 , QS_kga = function(a) {

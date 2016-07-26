@@ -1,4 +1,4 @@
-const http = require('http')
+const http = require('http');
 
 // var url = 'http://x-team.1course.cn/Task/DisplayFinish?id=812062&tqId=7024&ticks=635971128930504139&token=9F5CB8A7CE55BC1D916ACDABB6178C42&saveUrl=&finishUrl=%2fAssignment%2fTaskFinish%3fuserNodeId%3d812062'
 // parse the url
@@ -16,7 +16,7 @@ var options = {
   headers: {
     'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36'
   }
-}
+};
 http.request(options, (res) => {
 })
 

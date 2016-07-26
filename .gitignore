@@ -4,3 +4,10 @@ words
 *.mp3
 *.folder
 *.html
+
+# others
+doc
+TAGS
+.idea
+node_modules
+public

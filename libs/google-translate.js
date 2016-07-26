@@ -41,7 +41,7 @@ function query (word) {
   })
 }
 
-// speak one word prounciation
+// get one word prounciation
 function speak (word, tl) {
   let options = utils.deepClone(google_translate_option)
   if(!tl) tl = 'en'
@@ -95,7 +95,7 @@ function savePronunciation2 (filename) {
         filenamenoodle = new FilenameNoodle
 
   try {
-    fs.mkdirSync(`./${foldername}`)    
+    fs.mkdirSync(`./${foldername}`)
   } catch (e) {
     console.log(`Overwite the ${foldername}.`)
   }
@@ -105,14 +105,14 @@ function savePronunciation2 (filename) {
       fs.writeFile(`./${foldername}/${word}.mp3`, data, () => {
         filenamenoodle.set(word, 'en', `./${foldername}/${word}.mp3`)
       })
-      
+
       query(word).then((data) => {
         let d = resParser(data),
             word_cn = d[0][0][0]
         speak(word_cn, 'zh-CN').then((data) => {
           fs.writeFile(`./${foldername}/${word_cn}.mp3`, data, () => {
             filenamenoodle.set(word, 'cn', `./${foldername}/${word_cn}.mp3`)
-            
+
             // download and write all words when finish
             if (index === words.length - 1) {
               filenamenoodle.generateMp3File(filename)
@@ -147,7 +147,7 @@ function savePronunciation (filename) {
         wordsCount = words.length
   let buffer = [],
         size = 0
-  
+
   function writePronunciation (word) {
     // exclude the null string
     if (typeof word !== 'string' || word === '') {
