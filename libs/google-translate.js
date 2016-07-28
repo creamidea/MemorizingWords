@@ -41,11 +41,14 @@ function query (word, tl='en') {
 
 // get one word prounciation
 function speak (word, tl='en') {
-  let options = utils.deepClone(google_translate_option);
-  word = word.replace(/\s|[_]/g, ' ');
-  console.log('> Start looking for: ' + word);
-  options.path = '/translate_tts?ie=UTF-8&total=1&idx=0&client=t' + '&tl=' + tl + tk(word) + '&q=' + encodeURIComponent(word);
-  return request(options);
+  if (/\w{2,}/.test(word)) {
+    let options = utils.deepClone(google_translate_option);
+    word = word.replace(/\s|[_]/g, ' ');
+    console.log(`[${Date.now()}]> Start looking for: ${word}`);
+    options.path = '/translate_tts?ie=UTF-8&total=1&idx=0&client=t' + '&tl=' + tl + tk(word) + '&q=' + encodeURIComponent(word);
+    return request(options);
+  }
+  return new Promise();
 }
 
 class FilenameNoodle {
@@ -136,11 +139,11 @@ function parseFileContent(filename) {
  * save pronunciation and it's explaination
  */
 function savePronunciation (filename, DB_PATH='./words') {
-  const writeStream = fs.createWriteStream(`${filename.split('.')[0]}.mp3`),
-        writeEvent = new EventEmitter(),
+  const writeEvent = new EventEmitter(),
+        // writeStream = fs.createWriteStream(`${filename.split('.')[0]}.mp3`),
         words = parseFileContent(filename),
         wordsCount = words.length,
-        MAX_TASKS = 100; // related with fd number
+        MAX_TASKS = 10; // related with fd number
 
   let buffer = [],
       size = 0,
@@ -187,7 +190,11 @@ function savePronunciation (filename, DB_PATH='./words') {
     if (words.length > 0 && running < MAX_TASKS) {
       writePronunciation(words.shift());
     } else {
-      if (running === 0) console.log('Tasks over~');
+      if (running === 0) {
+        console.log('Tasks over~');
+        console.timeEnd('Pronunciation-used');
+      }
+
       // writeStream.write(Buffer.concat(buffer, size), (e) => {
       //   e && console.log(e);
       //   writeEvent.removeListener('write-end', () => {});
@@ -197,6 +204,7 @@ function savePronunciation (filename, DB_PATH='./words') {
       // });
     }
   });
+  console.time('Pronunciation-used');
   writeEvent.emit('write-end');
 }
 

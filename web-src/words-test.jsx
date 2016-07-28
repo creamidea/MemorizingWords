@@ -3,15 +3,22 @@
 import React from 'react';
 
 class Pronunciation extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {playing: false};
+  }
   play (word) {
     let p = new Audio(`/reviews/words/${word}.mp3`);
+    let _this = this;
+    p.addEventListener('ended', (() => {this.setState({playing: false});}).bind(this));
+    this.setState({playing: true});
     p.play();
   }
   render () {
     // console.log('play...: ', this.props.word);
     return (
         <div style={{display: "inline-block"}}>
-          <button onClick={this.play.bind(this, this.props.word)}>&#x23f5;playing...</button>
+        <button onClick={this.play.bind(this, this.props.word)} disabled={this.state.playing}>&#x23f5;playing...</button>
         </div>
     );
   }
@@ -20,7 +27,7 @@ class Pronunciation extends React.Component {
 class Topic extends React.Component {
 
   constructor (props) {
-    super(props)
+    super(props);
     this.state = {RefAnswerShowing: false};
   }
 
@@ -42,7 +49,7 @@ class Topic extends React.Component {
       display = "inline-block";
     }
     return (
-        <div>
+        <div style={{magin: "2px auto"}}>
         <Pronunciation word={this.props.word}/>
         <button onClick={this.answer.bind(this, 'y')}>Yes</button>
         <button onClick={this.answer.bind(this, 'n')}>No</button>
