@@ -72,7 +72,7 @@ var lM = function(a) {
 }
 , TK = function(a) {
   // console.log('>>>>>>>>', a.toString())
-  console.log('>>> ', eval(Pb + a + Ub))
+  // console.log('>>> ', eval(Pb + a + Ub))
   return eval(Pb + a + Ub)
 }
 , QS_kga = function(a) {
@@ -208,14 +208,14 @@ var lM = function(a) {
   // console.log(`Use Protocol: ${protocol}`)
   // console.log(options)
   if (['http', 'https'].indexOf(protocol) < 0) {
-    console.error(`The protocol: ${protocol} is not supported!`)
-    return
+    throw `The protocol: ${protocol} is not supported!`
   }
   let [_request, _port] = protocol === 'http' ?
-      [http.request, 80] :
-      [https.request, 443]
+        [http.request, 80] :
+        [https.request, 443];
 
-  options.port = _port
+  options.port = _port;
+
   return new Promise( (resolve, reject) => {
     let req = _request(options, (res) => {
       // console.log(`>Code: ${res.statusCode} ->`)

@@ -1,3 +1,5 @@
+TAGS
+
 words
 *.txt
 *.text
@@ -7,7 +9,8 @@ words
 
 # others
 doc
-TAGS
 .idea
 node_modules
 public
+!public/index.html
+temporary
