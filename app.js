@@ -1,5 +1,6 @@
 const koa = require('koa'),
       koaStatic = require('koa-static'),
+      bodyParser = require('koa-bodyparser'),
       app = koa(),
       debug = require('debug')('dev');
 
@@ -13,6 +14,7 @@ module.global = {
 };
 
 app.use(koaStatic(PUBLIC_PATH));
+app.use(bodyParser());
 
 app.use(wordsTestRouter.routes());
 app.use(wordsTestRouter.allowedMethods());

@@ -16,6 +16,14 @@ function exec (cmd, options) {
     });
   });
 }
+function writeDB (title, article) {
+  return new Promise ( (resolve, reject) => {
+    fs.writeFile(`${DB_PATH}/${title}.txt`, article, (err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+}
 
 router.prefix('/words-test');
 
@@ -29,15 +37,40 @@ router.get('/content', function *(next) {
       }
     };
   } catch(err) {
-    this.body = {statue: 500, statusText: err.message};
-    return
+    this.statusCode = 500;
+    this.body = err.message;
+    return;
   }
   this.body = files;
+});
+
+router.get('/order/:filename', function*(next){
+  let filename = this.params.filename, stdout;
+  try {
+    stdout = yield exec(`node ${process.cwd()}/libs/google-translate.js ${filename}.txt`, {cwd: DB_PATH});
+  } catch (err) {
+    this.statusCode = 500;
+    this.body = err.message;
+    return;
+  }
+  this.body = stdout;
 });
 
 router.get('/:content', function*(next){
   let content = this.params.content;
   this.body = 'h';
+});
+
+router.post('/words', function *(next) {
+  let status = 200, statusText = "";
+  try {
+    var {title, article} = this.request.body;
+    yield writeDB(title, article);
+  } catch (err) {
+    this.statusCode = 500;
+    this.body = err.message;
+  }
+  this.body = 'success';
 });
 
 module.exports = router;

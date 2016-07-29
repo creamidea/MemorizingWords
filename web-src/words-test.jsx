@@ -1,6 +1,8 @@
 "use strict";
 
 import React from 'react';
+import SubmitArticle from './submit-article';
+import Fetch from './fetch';
 
 class File extends React.Component {
   handleClick () {
@@ -44,7 +46,7 @@ class Pronunciation extends React.Component {
   }
 }
 
-class Topic extends React.Component {
+class Topic extends Fetch(React.ComponentFetch) {
 
   constructor (props) {
     super(props);
@@ -66,14 +68,14 @@ class Topic extends React.Component {
 
   translate (word) {
     this.setState({fetching: true});
-    fetch(`/reviews/words/${word}.txt`).then( (res) => {
-      return res.text();
-    }).then( ((text)=> {
+    this.fetch(`/reviews/words/${word}.txt`).then( ((text)=> {
       let d = eval(`(${text})`);
       let pos = d[0][1] && d[0][1].slice(-1)[0];
       this.setState({pos: pos});
       this.setState({refAnswerShowing: true, fetching: false});
-    }).bind(this));
+    }).bind(this)).catch( (err) => {
+      console.log(`translate error: ${err}`);
+    });
   }
 
   handleDAFT () {
@@ -106,28 +108,10 @@ class Topic extends React.Component {
   }
 }
 
-export default class WordsTest extends React.Component {
+export default class WordsTest extends Fetch(React.Component) {
   constructor(props) {
     super(props);
     this.state = {topics: [], errorMsg: "", files: []};
-  }
-
-  fetch (url) {
-    return new Promise( (resolve, reject) => {
-      fetch(url).then( (res) => {
-        let contentType = res.headers.get('Content-Type');
-        if (res.ok) {
-          if (/text/.test(contentType))
-            return res.text();
-          else if (/json/.test(contentType))
-            return res.json();
-        } else {
-          reject(res.statusText);
-        }
-      }).then( (content) => {
-        resolve(content);
-      });
-    });
   }
 
   getWordsList (wordsList) {
@@ -175,24 +159,27 @@ export default class WordsTest extends React.Component {
     }
     this.getWordsList(wordsList);
   }
+  handleSubmitArticle () {
+    this.getWordsListContent();
+  }
 
   render () {
     return (
-      <div className="words-test">
+        <div className="words-test">
         <form onSubmit={this.handleSubmit.bind(this)}>
           <label for="words-list">Which word-list do you want to test?</label>
           <input type="text" id="words-list" ref="wordsList"/>
           <button type="submit">Go</button>
         </form>
-        <div style={{display: "flex"}}>
+        <div style={{display: "flex", marginTop: "4px"}}>
+          <SubmitArticle onSubmit={this.handleSubmitArticle.bind(this)}/>
           <ul>{this.state.files}</ul>
           <ul>{this.state.topics}</ul>
         </div>
         <p>{this.state.errorMsg}</p>
-      </div>
+        </div>
     );
   }
 }
-
 
 // http://bbs.reactnative.cn/topic/15/react-react-native-%E7%9A%84es5-es6%E5%86%99%E6%B3%95%E5%AF%B9%E7%85%A7%E8%A1%A8
