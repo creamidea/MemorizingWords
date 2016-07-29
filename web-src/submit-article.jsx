@@ -50,8 +50,9 @@ export default class SubmitArticle extends Fetch(React.Component) {
     }).catch( (err) => {
       this.showAlert(`[submit]: ${err}`);
     });
+
     // callback
-    this.props.onSubmit();
+    if (typeof this.props.onSubmit === 'function') this.props.onSubmit();
   }
 
   applyOrder (e) {
@@ -70,7 +71,7 @@ export default class SubmitArticle extends Fetch(React.Component) {
   render () {
     const state = this.state;
     return (
-        <div style={{width: '20%'}}>
+        <div>
         <Alert ref="alert"/>
         <form onSubmit={this.handleSubmit.bind(this)}>
 
