@@ -13,9 +13,9 @@ class File extends React.Component {
     let {filename, size, date} = props;
     return (
         <li>
-        <strong style={{marginRight: "10px"}}><a onClick={this.handleClick.bind(this)} href="javascript:void(0)">{filename}</a></strong>
-        <span style={{marginRight: "10px"}}>{size}B</span>
-        <span>{date}</span>
+          <strong style={{marginRight: "10px"}}><a onClick={this.handleClick.bind(this)} href="javascript:void(0)">{filename}</a></strong>
+          <span style={{marginRight: "10px"}}>{size}B</span>
+          <span>{date}</span>
         </li>
     );
   }
@@ -37,8 +37,8 @@ class Pronunciation extends React.Component {
     // console.log('play...: ', this.props.word);
     // console.log(this.props.tabindex);
     return (
-        <div style={{display: "inline-block"}}>
-        <button onClick={this.play.bind(this, this.props.word)} disabled={this.state.playing} tabindex={this.props.tabindex}>&#x23f5;playing...</button>
+        <div style={{display: "inline-block", marginRight: "10px"}}>
+          <button className="btn btn-success" onClick={this.play.bind(this, this.props.word)} disabled={this.state.playing} tabindex={this.props.tabindex}>&#x23f5;play</button>
         </div>
     );
   }
@@ -48,7 +48,8 @@ class Topic extends React.Component {
 
   constructor (props) {
     super(props);
-    this.state = {refAnswerShowing: false, pos: "", fetching: false};
+    this.state = {refAnswerShowing: false, pos: "", fetching: false,
+                  btnDAFT: {text: 'DAFT', state: 'hide'}};
   }
 
   answer (choice) {
@@ -75,20 +76,31 @@ class Topic extends React.Component {
     }).bind(this));
   }
 
+  handleDAFT () {
+    let btnDAFT = this.state.btnDAFT;
+    if (btnDAFT.state === 'hide') {
+      this.translate(this.props.word);
+      this.setState({btnDAFT: {text: 'HIDE', state: 'show'}, refAnswerShowing: true});
+    } else {
+      this.setState({btnDAFT: {text: 'DAFT', state: 'hide'}, refAnswerShowing: false});
+    }
+  }
+
   render () {
+    const state = this.state;
     let display = "none";
     if (this.state.refAnswerShowing) {
-      display = "inline-block";
+      display = "block";
     }
     return (
-        <li style={{magin: "2px auto", listStyleType: "decimal-leading-zero"}}>
-        <Pronunciation word={this.props.word} tabindex={this.props.tabindex}/>
-        <button onClick={this.answer.bind(this, 'y')}>Yes</button>
-        <button onClick={this.answer.bind(this, 'n')} disabled={this.state.fetching}>DAFT</button>
-        <div style={{display: display}} >
-        <h2 style={{display: "inline"}}>{this.props.word}</h2>
-        <p style={{display: "inline"}}>/{this.state.pos}/</p>
-        </div>
+        <li style={{margin: "4px auto", listStyleType: "decimal-leading-zero"}}>
+          <Pronunciation word={this.props.word} tabindex={this.props.tabindex}/>
+          <button onClick={this.answer.bind(this, 'y')} hidden>Yes</button>
+          <button type="button" className="btn btn-danger" onClick={this.handleDAFT.bind(this)} disabled={state.fetching}>{state.btnDAFT.text}</button>
+          <div style={{display: display}} >
+            <h2 style={{margin: 0}}>{this.props.word}</h2>
+            <p style={{margin: 0}}>/{state.pos}/</p>
+          </div>
         </li>
     );
   }
