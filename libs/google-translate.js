@@ -191,7 +191,7 @@ function savePronunciation (filename, DB_PATH='./words') {
       writePronunciation(words.shift());
     } else {
       if (running === 0) {
-        console.log('Tasks over~');
+        console.log(`Counter: ${wordsCount} Done.Tasks over~`);
         console.timeEnd('Pronunciation-used');
       }
 
