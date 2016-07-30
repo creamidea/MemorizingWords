@@ -72,9 +72,14 @@ export default class SubmitArticle extends Fetch(React.Component) {
     const state = this.state;
     return (
         <div>
-        <Alert ref="alert"/>
-        <form onSubmit={this.handleSubmit.bind(this)}>
+        <h2>Submit your article.</h2>
+        <button style={{marginBottom: "6px"}} className="btn btn-primary" data-toggle="collapse" href="#submit-article" aria-expanded="false" aria-controls="submit-article">Collapse</button>
 
+        <div className="collapse" id="submit-article"><div className="well">
+
+        <Alert ref="alert"/>
+
+        <form onSubmit={this.handleSubmit.bind(this)}>
         <div className="form-group">
           <label for="submit-article-title">Title</label>
           <input id="submit-article-title" type="text" className="title form-control" ref="title" value={state.title}/>
@@ -87,8 +92,10 @@ export default class SubmitArticle extends Fetch(React.Component) {
 
         <button type="submit" className="btn btn-default" style={{marginRight: "5px"}}>Submit</button>
         <button className="btn btn-danger" onClick={this.applyOrder.bind(this)}>Pronunciation</button>
-
         </form>
+
+        </div>
+        </div>
         </div>
     );
   }
