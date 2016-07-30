@@ -93,7 +93,7 @@ class Examples extends Component {
 class Translation extends React.Component {
   constructor (props) {
     super(props);
-    this.state = {word: "", translation: [], display: 'none'};
+    this.state = {word: "", translation: [], display: 'none', marginTop: 0};
 
   }
   // @param translation array 15
@@ -102,9 +102,9 @@ class Translation extends React.Component {
   // 12: definitions
   // 13: more examples
   // 14: see also
-  show (word, translation) {
+  show (word, translation, marginTop) {
     // console.log(`handle ${word} and ${translation}`);
-    this.setState({word: word, translation: translation, display:'block'});
+    this.setState({word: word, translation: translation, display:'block', marginTop: marginTop});
   }
 
   hide () {
@@ -112,7 +112,7 @@ class Translation extends React.Component {
   }
 
   render () {
-    let {word, translation, display} = this.state;
+    let {word, translation, display, marginTop} = this.state;
     if (translation.length === 0) return (<div></div>);
     let definitions = translation[12],
         synonyms    = translation[11],
@@ -120,7 +120,7 @@ class Translation extends React.Component {
         seeAlso     = translation[14];
     // <div style={{width: "345px", position: "fixed", right: "4px"}}>
     return (
-        <div style={{display: display}}>
+      <div style={{display: display, marginTop: marginTop - 64 +'px', transition: "all 0.5s"}}>
         <p>一天不学习，浑身就难受。</p>
         <p>I prefer to die if I don't study at a day.</p>
         <div>
@@ -153,17 +153,31 @@ class Pronunciation extends React.Component {
     super(props);
     this.state = {playing: false};
   }
-  play (word) {
-    let p = new Audio(`/reviews/words/${word}.mp3`);
-    let _this = this;
+  play (word, source) {
+    let p;
+    switch(source) {
+    case "local":
+      p = new Audio(`/reviews/words/${word}.mp3`);
+      break;
+    case "online":
+      p = new Audio(`https://ssl.gstatic.com/dictionary/static/sounds/de/0/${this.props.word}.mp3`);
+      break;
+    }
     p.addEventListener('ended', (() => {this.setState({playing: false});}).bind(this));
+    p.addEventListener('error', (() => {
+      let {online} = this.refs;
+      this.setState({playing: false});
+      online.disabled = true;
+      online.innerHTML = "FAILD";
+    }).bind(this));
     this.setState({playing: true});
     p.play();
   }
   render () {
     return (
-        <div style={{display: "inline-block", marginRight: "10px"}}>
-          <button className="btn btn-success" onClick={this.play.bind(this, this.props.word)} disabled={this.state.playing} tabindex={this.props.tabindex}>&#x23f5;play</button>
+        <div style={{display: "inline-block", marginRight: "10px"}} className="btn-group" role="group">
+          <button type="button" className="btn btn-success" onClick={this.play.bind(this, this.props.word, 'local')} disabled={this.state.playing} tabindex={this.props.tabindex}>&#x23f5;local</button>
+          <button ref="online" type="button" className="btn btn-success" onClick={this.play.bind(this, this.props.word, 'online')} disabled={this.state.playing}>&#x23f5;online</button>
         </div>
     );
   }
@@ -223,22 +237,22 @@ class Topic extends Fetch(React.ComponentFetch) {
     e.preventDefault();
     const props = this.props;
     // callback
-    if (typeof props.onClick === 'function') props.onClick(props.word, this.state.translation);
+    if (typeof props.onClick === 'function') props.onClick(props.word, this.state.translation, e.target.offsetTop);
   }
 
   render () {
-    const state = this.state;
+    const state = this.state, props = this.props;
     let display = "none";
     if (this.state.refAnswerShowing) {
       display = "block";
     }
     return (
         <li style={{margin: "4px auto", listStyleType: "decimal-leading-zero"}}>
-        <Pronunciation word={this.props.word} tabindex={this.props.tabindex}/>
+        <Pronunciation word={props.word} tabindex={props.tabindex}/>
         <button onClick={this.answer.bind(this, 'y')} hidden>Yes</button>
         <button type="button" className="btn btn-danger" onClick={this.handleDAFT.bind(this)} disabled={state.fetching}>{state.btnDAFT.text}</button>
         <div style={{display: display}}>
-          <h2 style={{margin: 0}}><a href="javascript:void(0)" onClick={this.handleClickWord.bind(this)}>{this.props.word}</a></h2>
+          <h2 style={{margin: 0}}><a href="javascript:void(0)" onClick={this.handleClickWord.bind(this)}>{props.word}</a></h2>
           <p style={{margin: 0}}>/{state.pos}/</p>
         </div>
         </li>
@@ -313,25 +327,32 @@ export default class WordsTest extends Fetch(React.Component) {
     this.getWordsListContent();
   }
   // the callback of clicking the word to show the translation
-  handleClickWord (word, translation) {
-    this.refs.translation.show(word, translation);
+  handleClickWord (word, translation, marginTop) {
+    this.refs.translation.show(word, translation, marginTop);
   }
 
   render () {
+    let state = this.state;
     return (
         <div className="words-test">
+        <SubmitArticle onSubmit={this.handleSubmitArticle.bind(this)}/>
         <form onSubmit={this.handleSubmit.bind(this)}>
           <label for="words-list">Which word-list do you want to test?</label>
           <input type="text" id="words-list" ref="wordsList"/>
           <button type="submit">Go</button>
         </form>
         <div style={{marginTop: "4px"}} className="row">
-          <div className="col-md-2"><SubmitArticle onSubmit={this.handleSubmitArticle.bind(this)}/></div>
-          <div className="col-md-3"><ul>{this.state.files}</ul></div>
-          <div className="col-md-2"><ul>{this.state.topics}</ul></div>
-          <div className="col-md-5"><Translation ref="translation"/></div>
+          <div className="col-md-3">
+            <h2>Content</h2>
+            <p>There are {state.files.length} files:</p>
+            <ul>{state.files}</ul></div>
+          <div className="col-md-3">
+            <h2>Topics</h2>
+            <p>There are {state.topics.length} words:</p>
+            <ul>{state.topics}</ul></div>
+          <div className="col-md-6"><Translation ref="translation"/></div>
         </div>
-        <p>{this.state.errorMsg}</p>
+        <p>{state.errorMsg}</p>
         </div>
     );
   }
