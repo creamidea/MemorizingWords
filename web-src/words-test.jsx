@@ -102,9 +102,9 @@ class Translation extends React.Component {
   // 12: definitions
   // 13: more examples
   // 14: see also
-  show (word, translation, marginTop) {
+  show (word, translation) {
     // console.log(`handle ${word} and ${translation}`);
-    this.setState({word: word, translation: translation, display:'block', marginTop: marginTop});
+    this.setState({word: word, translation: translation, display:'block', marginTop: $(document).scrollTop()});
   }
 
   hide () {
@@ -120,7 +120,7 @@ class Translation extends React.Component {
         seeAlso     = translation[14];
     // <div style={{width: "345px", position: "fixed", right: "4px"}}>
     return (
-      <div style={{display: display, marginTop: marginTop - 64 +'px', transition: "all 0.5s"}}>
+      <div style={{display: display, marginTop: marginTop - 168 + 'px', transition: "all 0.44s"}}>
         <p>一天不学习，浑身就难受。</p>
         <p>I prefer to die if I don't study at a day.</p>
         <div>
@@ -237,7 +237,7 @@ class Topic extends Fetch(React.ComponentFetch) {
     e.preventDefault();
     const props = this.props;
     // callback
-    if (typeof props.onClick === 'function') props.onClick(props.word, this.state.translation, e.target.offsetTop);
+    if (typeof props.onClick === 'function') props.onClick(props.word, this.state.translation);
   }
 
   render () {
@@ -327,8 +327,8 @@ export default class WordsTest extends Fetch(React.Component) {
     this.getWordsListContent();
   }
   // the callback of clicking the word to show the translation
-  handleClickWord (word, translation, marginTop) {
-    this.refs.translation.show(word, translation, marginTop);
+  handleClickWord (word, translation) {
+    this.refs.translation.show(word, translation);
   }
 
   render () {

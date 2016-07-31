@@ -8,6 +8,7 @@ words
 *.html
 
 # others
+bash.exe.stackdump
 doc
 .idea
 node_modules
