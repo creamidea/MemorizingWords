@@ -38,6 +38,7 @@ class File extends React.Component {
 class Definitions extends Component {
   render () {
     let {data} = this.props, container = [];
+    if (!data || data.length === 0) return (<div>-</div>);
     for (var d of data) {
       let list = [];
       for (var def of d[1]) {
@@ -58,6 +59,7 @@ class Definitions extends Component {
 class Synonyms extends Component {
   render () {
     let {data} = this.props, container = [];
+    if (!data || data.length === 0) return (<div>-</div>);
     for (var d of data) {
       let list = [];
       for (var syn of d[1]) {
@@ -94,7 +96,6 @@ class Translation extends React.Component {
   constructor (props) {
     super(props);
     this.state = {word: "", translation: [], display: 'none', marginTop: 0};
-
   }
   // @param translation array 15
   // 0: word && pos
@@ -153,8 +154,8 @@ class Pronunciation extends React.Component {
     super(props);
     this.state = {playing: false};
   }
-  play (word, source) {
-    let p;
+  play (word, source, e) {
+    let p, elt = e.target;
     switch(source) {
     case "local":
       p = new Audio(`/reviews/words/${word}.mp3`);
@@ -163,7 +164,11 @@ class Pronunciation extends React.Component {
       p = new Audio(`https://ssl.gstatic.com/dictionary/static/sounds/de/0/${this.props.word}.mp3`);
       break;
     }
-    p.addEventListener('ended', (() => {this.setState({playing: false});}).bind(this));
+    p.addEventListener('ended', ((elt) => {
+      let top = $(elt).offset().top;
+      $("html, body").stop().animate({scrollTop: top - 3}, '500', 'swing');
+      this.setState({playing: false});
+    }).bind(this, elt));
     p.addEventListener('error', (() => {
       let {online} = this.refs;
       this.setState({playing: false});
@@ -223,11 +228,13 @@ class Topic extends Fetch(React.ComponentFetch) {
   }
 
   // toggle the DAFT button (DAFT || HIDE)
-  handleDAFT () {
+  handleDAFT (e) {
     let btnDAFT = this.state.btnDAFT;
     if (btnDAFT.state === 'hide') {
       this.translate(this.props.word);
       this.setState({btnDAFT: {text: 'HIDE', state: 'show'}, refAnswerShowing: true});
+      let top = $(e.target).offset().top;
+      $("html, body").stop().animate({scrollTop: top - 3}, '500', 'swing');
     } else {
       this.setState({btnDAFT: {text: 'DAFT', state: 'hide'}, refAnswerShowing: false});
     }
@@ -237,7 +244,7 @@ class Topic extends Fetch(React.ComponentFetch) {
     e.preventDefault();
     const props = this.props;
     // callback
-    if (typeof props.onClick === 'function') props.onClick(props.word, this.state.translation);
+    if (typeof props.onClick === 'function') props.onClick(props.word, this.state.translation, e.target.offsetHeight);
   }
 
   render () {
@@ -327,7 +334,7 @@ export default class WordsTest extends Fetch(React.Component) {
     this.getWordsListContent();
   }
   // the callback of clicking the word to show the translation
-  handleClickWord (word, translation) {
+  handleClickWord (word, translation, marginTop) {
     this.refs.translation.show(word, translation);
   }
 
