@@ -114,18 +114,27 @@ class Translation extends React.Component {
 
   render () {
     let {word, translation, display, marginTop} = this.state;
+    let word2, wordColor = "#777";
     if (translation.length === 0) return (<div></div>);
     let definitions = translation[12],
         synonyms    = translation[11],
         examples    = translation[13],
         seeAlso     = translation[14];
     // <div style={{width: "345px", position: "fixed", right: "4px"}}>
+    if (definitions && definitions[0] && definitions[0][2]) {
+      word2 = definitions[0][2];
+      if (word2 !== word) {
+        wordColor = "#D9534F";
+        word = word2;
+      }
+    }
+
     return (
       <div style={{display: display, marginTop: marginTop - 168 + 'px', transition: "all 0.44s"}}>
         <p>一天不学习，浑身就难受。</p>
         <p>I prefer to die if I don't study at a day.</p>
         <div>
-          <h3><span>Definitions of</span> {word}</h3>
+          <h3><span>Definitions of</span><span style={{color: wordColor}}> {word}</span></h3>
           <Definitions data={definitions}/>
         </div>
         <div>
