@@ -33,20 +33,26 @@ function parseMp3(data) {
  *   en -> English
  */
 function query (word, tl='en') {
-  let options = utils.deepClone(google_translate_option);
+  let option = utils.deepClone(google_translate_option);
   word = word.replace(/\s|[_]/g, ' ');
-  options.path = `/translate_a/single?client=t&sl=en&tl=${tl}&hl=en&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=btn&rom=1&srcrom=1&ssel=3&tsel=6&kc=0&tk=${tk(word)}&q=${encodeURIComponent(word)}`;
-  return request(options);
+  option.path = `/translate_a/single?client=t&sl=en&tl=${tl}&hl=en&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=btn&rom=1&srcrom=1&ssel=3&tsel=6&kc=0&tk=${tk(word)}&q=${encodeURIComponent(word)}`;
+  return request(option);
 }
 
+/**
+ * google-translation
+ * gstatic - https://ssl.gstatic.com/dictionary/static/sounds/de/0/cogitate.mp3
+ * http://www.oxfordlearnersdictionaries.com/media/english/us_pron/f/fla/flagr/flagrant__us_1.mp3
+ * http://www.yourdictionary.com/audio/h/he/hello.mp3
+ */
 // get one word prounciation
 function speak (word, tl='en') {
   if (/\w{2,}/.test(word)) {
-    let options = utils.deepClone(google_translate_option);
+    let option = utils.deepClone(google_translate_option);
     word = word.replace(/\s|[_]/g, ' ');
     console.log(`[${Date.now()}]> Start looking for: ${word}`);
-    options.path = '/translate_tts?ie=UTF-8&total=1&idx=0&client=t' + '&tl=' + tl + tk(word) + '&q=' + encodeURIComponent(word);
-    return request(options);
+    option.path = '/translate_tts?ie=UTF-8&total=1&idx=0&client=t' + '&tl=' + tl + tk(word) + '&q=' + encodeURIComponent(word);
+    return request(option);
   }
   return new Promise();
 }

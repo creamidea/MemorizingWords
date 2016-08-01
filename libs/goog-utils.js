@@ -204,9 +204,8 @@ var lM = function(a) {
   //     return QS_Pla(k, c, "C"),
   //     !1;
 }
-, request = function(options, protocol='http') {
+, request = function(option, protocol='http') {
   // console.log(`Use Protocol: ${protocol}`)
-  // console.log(options)
   if (['http', 'https'].indexOf(protocol) < 0) {
     throw `The protocol: ${protocol} is not supported!`
   }
@@ -214,11 +213,12 @@ var lM = function(a) {
         [http.request, 80] :
         [https.request, 443];
 
-  options.port = _port;
+  option.port = _port;
+  // console.log(option);
 
   return new Promise( (resolve, reject) => {
-    let req = _request(options, (res) => {
-      // console.log(`>Code: ${res.statusCode} ->`)
+    let req = _request(option, (res) => {
+      // console.log(`> Code: ${res.statusCode} ->`)
       let chunks = [], size = 0
       res.on('data', (chunk) => {
         chunks.push(chunk)
