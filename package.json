@@ -4,13 +4,18 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "DEBUG=dev PORT=3000 node app.js"
+    "test": "DEBUG=dev PORT=3000 node app.js",
+    "build:webpack": "./node_modules/webpack/bin/webpack.js --cache --profile --progress -d --hot --config webpack.config.js",
+    "build:dll": "./node_modules/webpack/bin/webpack.js --cache --profile --progress --config=dll.config.js",
+    "build": "npm run build:dll && npm run build:webpack"
   },
   "author": "creamidea@gmail.com",
   "license": "MIT",
   "dependencies": {
     "koa": "^1.2.1",
     "koa-bodyparser": "^2.2.0",
+    "koa-logger": "^1.3.0",
+    "koa-router": "^5.4.0",
     "koa-static": "^2.0.0",
     "react": "^15.2.1",
     "react-dom": "^15.2.1"
@@ -25,7 +30,6 @@
     "babel-preset-stage-0": "^6.5.0",
     "babel-runtime": "^6.11.6",
     "debug": "^2.2.0",
-    "koa-router": "^5.4.0",
     "webpack": "^1.13.1"
   }
 }

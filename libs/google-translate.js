@@ -127,7 +127,7 @@ function savePronunciation2 (filename) {
 // TODO: when file is huge.
 function parseFileContent(filename) {
   var content = fs.readFileSync(filename),
-      words = [];
+      words = [], _c = [];
   try {
     words = JSON.parse(content.toString());
   } catch (err) {
@@ -137,7 +137,16 @@ function parseFileContent(filename) {
       throw err;
     }
   }
-  return words;
+
+  // remove the comment
+  // remove the blank column
+  for (var w of words) {
+    if (w.startsWith('#')) continue;
+    if (/\w{2,}/.test(w)) {
+      _c.push(w);
+    }
+  }
+  return _c;
 }
 
 

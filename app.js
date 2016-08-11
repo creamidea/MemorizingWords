@@ -1,6 +1,7 @@
 const koa = require('koa'),
       koaStatic = require('koa-static'),
       bodyParser = require('koa-bodyparser'),
+      logger = require('koa-logger'),
       app = koa(),
       debug = require('debug')('dev');
 
@@ -13,6 +14,7 @@ module.global = {
   PUBLIC_PATH: PUBLIC_PATH
 };
 
+app.use(logger());
 app.use(koaStatic(PUBLIC_PATH));
 app.use(bodyParser());
 

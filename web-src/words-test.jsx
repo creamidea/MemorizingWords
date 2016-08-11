@@ -20,11 +20,11 @@ class File extends React.Component {
     let props = this.props;
     let {filename, size, date} = props;
     return (
-        <li>
-          <strong style={{marginRight: "10px"}}><a onClick={this.handleClick.bind(this)} href="javascript:void(0)">{filename}</a></strong>
-          <span style={{marginRight: "10px"}}>{size}B</span>
-          <span>{date}</span>
-        </li>
+      <li>
+        <strong style={{marginRight: "10px"}}><a onClick={this.handleClick.bind(this)} href="javascript:void(0)">{filename}</a></strong>
+        <span style={{marginRight: "10px"}}>{size}B</span>
+        <span>{date}</span>
+      </li>
     );
   }
 }
@@ -43,14 +43,14 @@ class Definitions extends Component {
       let list = [];
       for (var def of d[1]) {
         list.push((
-            <li><p>{def[0]}</p><p style={{color: "#777"}}>{def[2]}</p></li>
+          <li><p>{def[0]}</p><p style={{color: "#777"}}>{def[2]}</p></li>
         ));
       }
       container.push((
-          <div>
+        <div>
           <p>{d[0]}</p>
           <ul>{list}</ul>
-          </div>
+        </div>
       ));
     }
     return (<div>{container}</div>);
@@ -64,14 +64,14 @@ class Synonyms extends Component {
       let list = [];
       for (var syn of d[1]) {
         list.push((
-            <li>{syn[0].join(', ')}</li>
+          <li>{syn[0].join(', ')}</li>
         ));
       }
       container.push((
-          <div>
+        <div>
           <p>{d[0]}</p>
           <ul>{list}</ul>
-          </div>
+        </div>
       ));
     }
     return (<div>{container}</div>);
@@ -85,10 +85,10 @@ class Examples extends Component {
       container.push((<p>{exm[0]}</p>));
     }
     return (
-        <div>
+      <div>
         <button style={{marginBottom: "6px"}} className="btn btn-primary" data-toggle="collapse" href="#translate-examples" aria-expanded="false" aria-controls="translate-examples">See more.</button>
         <div className="collapse" id="translate-examples"><div className="well">{container}</div></div>
-        </div>);
+      </div>);
   }
 }
 
@@ -149,7 +149,7 @@ class Translation extends React.Component {
           <h3>See Also</h3>
           <div>{seeAlso ? seeAlso[0].join(', ') : "-"}</div>
         </div>
-        </div>
+      </div>
     );
   }
 }
@@ -264,13 +264,13 @@ class Topic extends Fetch(React.ComponentFetch) {
     }
     return (
         <li style={{margin: "4px auto", listStyleType: "decimal-leading-zero"}}>
-        <Pronunciation word={props.word} tabindex={props.tabindex}/>
-        <button onClick={this.answer.bind(this, 'y')} hidden>Yes</button>
-        <button type="button" className="btn btn-danger" onClick={this.handleDAFT.bind(this)} disabled={state.fetching}>{state.btnDAFT.text}</button>
-        <div style={{display: display}}>
-          <h2 style={{margin: 0}}><a href="javascript:void(0)" onClick={this.handleClickWord.bind(this)}>{props.word}</a></h2>
-          <p style={{margin: 0}}>/{state.pos}/</p>
-        </div>
+          <Pronunciation word={props.word} tabindex={props.tabindex}/>
+          <button onClick={this.answer.bind(this, 'y')} hidden>Yes</button>
+          <button type="button" className="btn btn-danger" onClick={this.handleDAFT.bind(this)} disabled={state.fetching}>{state.btnDAFT.text}</button>
+          <div style={{display: display}}>
+            <h2 style={{margin: 0}}><a href="javascript:void(0)" onClick={this.handleClickWord.bind(this)}>{props.word}</a></h2>
+            <p style={{margin: 0}}>/{state.pos}/</p>
+          </div>
         </li>
     );
   }
@@ -296,6 +296,8 @@ export default class WordsTest extends Fetch(React.Component) {
     this.fetch(`/reviews/${wordsList}.txt`).then( (txt) => {
       let topics = this.state.topics;
       txt.split(/\r?\n/g).forEach((value, index) => {
+        // remove comment && blank column
+        if (value.startsWith('#')) return;
         if (/\w{2,}/.test(value))
           topics.push(<Topic word={value} answer={this.answer.bind(this)} tabindex={index+1}
                       onClick={this.handleClickWord.bind(this)}/>);
@@ -351,24 +353,24 @@ export default class WordsTest extends Fetch(React.Component) {
     let state = this.state;
     return (
         <div className="words-test">
-        <SubmitArticle onSubmit={this.handleSubmitArticle.bind(this)}/>
-        <form onSubmit={this.handleSubmit.bind(this)}>
-          <label for="words-list">Which word-list do you want to test?</label>
-          <input type="text" id="words-list" ref="wordsList"/>
-          <button type="submit">Go</button>
-        </form>
-        <div style={{marginTop: "4px"}} className="row">
-          <div className="col-md-3">
-            <h2>Content</h2>
-            <p>There are {state.files.length} files:</p>
-            <ul>{state.files}</ul></div>
-          <div className="col-md-3">
-            <h2>Topics</h2>
-            <p>There are {state.topics.length} words:</p>
-            <ul>{state.topics}</ul></div>
-          <div className="col-md-6"><Translation ref="translation"/></div>
-        </div>
-        <p>{state.errorMsg}</p>
+          <SubmitArticle onSubmit={this.handleSubmitArticle.bind(this)}/>
+          <form onSubmit={this.handleSubmit.bind(this)}>
+            <label for="words-list">Which word-list do you want to test?</label>
+            <input type="text" id="words-list" ref="wordsList"/>
+            <button type="submit">Go</button>
+          </form>
+          <div style={{marginTop: "4px"}} className="row">
+            <div className="col-md-3">
+              <h2>Content</h2>
+              <p>There are {state.files.length} files:</p>
+              <ul>{state.files}</ul></div>
+            <div className="col-md-3">
+              <h2>Topics</h2>
+              <p>There are {state.topics.length} words:</p>
+              <ul>{state.topics}</ul></div>
+            <div className="col-md-6"><Translation ref="translation"/></div>
+          </div>
+          <p>{state.errorMsg}</p>
         </div>
     );
   }
