@@ -1,6 +1,6 @@
 "use strict";
 
-import { Component } from "React";
+import { Component } from "react";
 
 let Fetch = ComposedComponent => class extends Component {
   constructor(props) {

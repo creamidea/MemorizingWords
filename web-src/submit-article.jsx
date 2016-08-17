@@ -30,7 +30,7 @@ class Alert extends React.Component {
 export default class SubmitArticle extends Fetch(React.Component) {
   constructor (props) {
     super(props);
-    this.state = {title: null, article: ""};
+    this.state = {title: "", article: ""};
   }
 
   componentDidMount () {
@@ -81,13 +81,13 @@ export default class SubmitArticle extends Fetch(React.Component) {
 
         <form onSubmit={this.handleSubmit.bind(this)}>
         <div className="form-group">
-          <label for="submit-article-title">Title</label>
+          <label htmlFor="submit-article-title">Title</label>
           <input id="submit-article-title" type="text" className="title form-control" ref="title" value={state.title}/>
         </div>
 
         <div className="form-group">
-          <label for="submit-article-article">Article</label>
-          <textarea id="submit-article-article" className="article form-control" ref="article" rows={16}>{state.article}</textarea>
+          <label htmlFor="submit-article-article">Article</label>
+          <textarea id="submit-article-article" className="article form-control" ref="article" rows={16} defaultValue={state.article}></textarea>
         </div>
 
         <button type="submit" className="btn btn-default" style={{marginRight: "5px"}}>Submit</button>

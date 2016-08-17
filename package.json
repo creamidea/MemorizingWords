@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "DEBUG=dev PORT=3000 node app.js",
-    "build:webpack": "./node_modules/webpack/bin/webpack.js --cache --profile --progress -d --hot --config webpack.config.js",
-    "build:dll": "./node_modules/webpack/bin/webpack.js --cache --profile --progress --config=dll.config.js",
+    "build:dll": "node ./node_modules/webpack/bin/webpack.js --cache --profile --progress --config=dll.config.js",
+    "build:webpack": "node ./node_modules/webpack/bin/webpack.js --profile --progress --config webpack.config.js",
     "build": "npm run build:dll && npm run build:webpack"
   },
   "author": "creamidea@gmail.com",
@@ -18,7 +18,8 @@
     "koa-router": "^5.4.0",
     "koa-static": "^2.0.0",
     "react": "^15.2.1",
-    "react-dom": "^15.2.1"
+    "react-dom": "^15.2.1",
+    "redux": "^3.5.2"
   },
   "devDependencies": {
     "babel-core": "^6.11.4",

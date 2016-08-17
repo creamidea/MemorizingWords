@@ -13,10 +13,10 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    // new webpack.DllReferencePlugin({
-    //   context: __dirname,
-    //   manifest: require('./dll.json')
-    // }),
+    new webpack.DllReferencePlugin({
+      context: '.',
+      manifest: require('./dll.json')
+    }),
   ],
   module: {
     loaders: [

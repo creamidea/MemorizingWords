@@ -39,15 +39,15 @@ class Definitions extends Component {
   render () {
     let {data} = this.props, container = [];
     if (!data || data.length === 0) return (<div>-</div>);
-    for (var d of data) {
+    for (let [dIndex, d] of data.entries()) {
       let list = [];
-      for (var def of d[1]) {
+      for (let [defIndex,def] of d[1].entries()) {
         list.push((
-          <li><p>{def[0]}</p><p style={{color: "#777"}}>{def[2]}</p></li>
+          <li key={defIndex}><p>{def[0]}</p><p style={{color: "#777"}}>{def[2]}</p></li>
         ));
       }
       container.push((
-        <div>
+        <div key={dIndex}>
           <p>{d[0]}</p>
           <ul>{list}</ul>
         </div>
@@ -60,15 +60,15 @@ class Synonyms extends Component {
   render () {
     let {data} = this.props, container = [];
     if (!data || data.length === 0) return (<div>-</div>);
-    for (var d of data) {
+    for (let [dIndex, d] of data.entries()) {
       let list = [];
-      for (var syn of d[1]) {
+      for (var [sIndex, syn] of d[1].entries()) {
         list.push((
-          <li>{syn[0].join(', ')}</li>
+          <li key={sIndex}>{syn[0].join(', ')}</li>
         ));
       }
       container.push((
-        <div>
+        <div key={dIndex}>
           <p>{d[0]}</p>
           <ul>{list}</ul>
         </div>
@@ -81,8 +81,8 @@ class Examples extends Component {
   render () {
     let {data} = this.props, container = [];
     if (!data || data.length === 0) return (<div>-</div>);
-    for (var exm of data[0]) {
-      container.push((<p>{exm[0]}</p>));
+    for (let [eIndex, exm] of data[0].entries()) {
+      container.push((<p key={eIndex}>{exm[0]}</p>));
     }
     return (
       <div>
@@ -190,7 +190,7 @@ class Pronunciation extends React.Component {
   render () {
     return (
         <div style={{display: "inline-block", marginRight: "10px"}} className="btn-group" role="group">
-          <button type="button" className="btn btn-success" onClick={this.play.bind(this, this.props.word, 'local')} disabled={this.state.playing} tabindex={this.props.tabindex}>&#x23f5;local</button>
+          <button type="button" className="btn btn-success" onClick={this.play.bind(this, this.props.word, 'local')} disabled={this.state.playing} tabIndex={this.props.tabindex}>&#x23f5;local</button>
           <button ref="online" type="button" className="btn btn-success" onClick={this.play.bind(this, this.props.word, 'online')} disabled={this.state.playing}>&#x23f5;online</button>
         </div>
     );
@@ -264,7 +264,7 @@ class Topic extends Fetch(React.ComponentFetch) {
     }
     return (
         <li style={{margin: "4px auto", listStyleType: "decimal-leading-zero"}}>
-          <Pronunciation word={props.word} tabindex={props.tabindex}/>
+          <Pronunciation word={props.word} tabIndex={props.tabindex}/>
           <button onClick={this.answer.bind(this, 'y')} hidden>Yes</button>
           <button type="button" className="btn btn-danger" onClick={this.handleDAFT.bind(this)} disabled={state.fetching}>{state.btnDAFT.text}</button>
           <div style={{display: display}}>
@@ -299,7 +299,7 @@ export default class WordsTest extends Fetch(React.Component) {
         // remove comment && blank column
         if (value.startsWith('#')) return;
         if (/\w{2,}/.test(value))
-          topics.push(<Topic word={value} answer={this.answer.bind(this)} tabindex={index+1}
+          topics.push(<Topic key={index} word={value} answer={this.answer.bind(this)} tabIndex={index+1}
                       onClick={this.handleClickWord.bind(this)}/>);
       });
       this.setState({topics: topics, errorMsg: ""});
@@ -311,12 +311,12 @@ export default class WordsTest extends Fetch(React.Component) {
   getWordsListContent () {
     this.fetch(`/words-test/content`).then( ((files) => {
       let _d = [];
-      for (var file of files) {
+      for (let [index, file] of files.entries()) {
         let _f = file.split(/\s+/);
         let size = _f.shift();
         let filename = _f.pop();
         let date = _f.join(' ');
-        _d.push(<File size={size} filename={filename} date={date} getWordsList={this.getWordsList.bind(this)}/>);
+        _d.push(<File key={index} size={size} filename={filename} date={date} getWordsList={this.getWordsList.bind(this)}/>);
       }
       this.setState({files: _d});
     }).bind(this)).catch( (err) => {
@@ -353,9 +353,10 @@ export default class WordsTest extends Fetch(React.Component) {
     let state = this.state;
     return (
         <div className="words-test">
+          <div>Server Time</div>
           <SubmitArticle onSubmit={this.handleSubmitArticle.bind(this)}/>
           <form onSubmit={this.handleSubmit.bind(this)}>
-            <label for="words-list">Which word-list do you want to test?</label>
+            <label htmlFor="words-list">Which word-list do you want to test?</label>
             <input type="text" id="words-list" ref="wordsList"/>
             <button type="submit">Go</button>
           </form>
