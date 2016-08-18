@@ -5,7 +5,8 @@ const koa = require('koa'),
       app = koa(),
       debug = require('debug')('dev');
 
-const wordsTestRouter = require('./routers/words-test');
+const wordsTestRouter = require('./routers/words-test'),
+      serverStatusRouter = require('./routers/server-status');
 
 const PORT = process.env.PORT || 3000,
       PUBLIC_PATH = `${__dirname}/public`;
@@ -20,6 +21,8 @@ app.use(bodyParser());
 
 app.use(wordsTestRouter.routes());
 app.use(wordsTestRouter.allowedMethods());
+app.use(serverStatusRouter.routes());
+app.use(serverStatusRouter.allowedMethods());
 
 // app.use(function *() {
 //   this.body = 'Hello, world!';

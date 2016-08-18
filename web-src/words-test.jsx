@@ -203,7 +203,7 @@ class Pronunciation extends React.Component {
  * + word && POS
  * + translation
  */
-class Topic extends Fetch(React.ComponentFetch) {
+class Topic extends Fetch(React.Component) {
 
   constructor (props) {
     super(props);
@@ -353,7 +353,6 @@ export default class WordsTest extends Fetch(React.Component) {
     let state = this.state;
     return (
         <div className="words-test">
-          <div>Server Time</div>
           <SubmitArticle onSubmit={this.handleSubmitArticle.bind(this)}/>
           <form onSubmit={this.handleSubmit.bind(this)}>
             <label htmlFor="words-list">Which word-list do you want to test?</label>

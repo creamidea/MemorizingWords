@@ -1,6 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import WordsTest from './words-test';
+import ServerStatus from './server-status';
+
+ReactDOM.render(
+  <div>
+    <h1>
+      Server Status
+    </h1>
+    <ServerStatus />
+  </div>,
+  document.getElementById('server-status')
+);
+
 
 ReactDOM.render(
   <div>
