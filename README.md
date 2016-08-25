@@ -10,3 +10,10 @@ A platform for memorize and test words you have learned.
 ```sh
 > npm run build
 ```
+
+# Development
+## Branch
++ master
++ develop
++ features => add new function
++ hotfix => localhost
