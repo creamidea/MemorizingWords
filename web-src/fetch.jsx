@@ -39,7 +39,7 @@ let Fetch = ComposedComponent => class extends Component {
         }
       }).then( (content) => {
         resolve(content);
-      });
+      }).catch( error => {reject(error.message);});
     });
   }
 

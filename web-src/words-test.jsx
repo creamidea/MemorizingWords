@@ -371,6 +371,10 @@ export default class WordsTest extends Fetch(React.Component) {
             <div className="col-md-6"><Translation ref="translation"/></div>
           </div>
           <p>{state.errorMsg}</p>
+          <div>
+            <h2>Resources</h2>
+            <a href="/resources/PhoneticSymbol.swf" target="_blank">PhoneticSymbol</a>
+          </div>
         </div>
     );
   }
