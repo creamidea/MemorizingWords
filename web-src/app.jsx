@@ -13,7 +13,6 @@ ReactDOM.render(
   document.getElementById('server-status')
 );
 
-
 ReactDOM.render(
   <div>
     <h1>

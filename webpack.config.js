@@ -1,3 +1,4 @@
+const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
@@ -20,20 +21,21 @@ module.exports = {
   ],
   module: {
     loaders: [
-      {
-        test: /\.coffee$/,
-        include: __dirname + '/web-src',
-        loader: "coffee-loader"
-      },
+      // {
+      //   test: /\.coffee$/,
+      //   include: __dirname + '/web-src',
+      //   loader: "coffee-loader"
+      // },
       {
         test: /\.jsx$/,
-        exclude: /(node_modules|bower_components)/,
-        include: __dirname + '/web-src',
-        loader: "babel-loader",
+        exclude: /node_modules/,
+        // include: __dirname + '/web-src',
+        include: path.resolve(__dirname, 'web-src'),
+        loader: "babel",
         query: {
-          plugins: ['transform-runtime'],
+          // plugins: ['transform-runtime', 'transform-react-jsx'],
           cacheDirectory: true,
-          presets: ["react", "es2015", "stage-0"]
+          presets: ["es2015", "react"]
         }
       }
     ]
