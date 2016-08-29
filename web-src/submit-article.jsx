@@ -19,7 +19,7 @@ class Alert extends React.Component {
     let className = `alert alert-${state.level} alert-dismissible fade in`;
 
     return (
-        <div className={className} role="alert" style={{display: state.display}}>
+      <div className={className} role="alert" style={{display: state.display}}>
         <button type="button" className="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
         {state.text}
       </div>
@@ -71,32 +71,32 @@ export default class SubmitArticle extends Fetch(React.Component) {
   render () {
     const state = this.state;
     return (
-        <div>
+      <div>
         <h2>Submit your article.</h2>
         <button style={{marginBottom: "6px"}} className="btn btn-primary" data-toggle="collapse" href="#submit-article" aria-expanded="false" aria-controls="submit-article">Collapse</button>
 
         <div className="collapse" id="submit-article"><div className="well">
 
-        <Alert ref="alert"/>
+            <Alert ref="alert"/>
 
-        <form onSubmit={this.handleSubmit.bind(this)}>
-        <div className="form-group">
-          <label htmlFor="submit-article-title">Title</label>
-          <input id="submit-article-title" type="text" className="title form-control" ref="title" value={state.title}/>
-        </div>
+            <form onSubmit={this.handleSubmit.bind(this)}>
+              <div className="form-group">
+                <label htmlFor="submit-article-title">Title</label>
+                <input id="submit-article-title" type="text" className="title form-control" ref="title" value={state.title}/>
+              </div>
 
-        <div className="form-group">
-          <label htmlFor="submit-article-article">Article</label>
-          <textarea id="submit-article-article" className="article form-control" ref="article" rows={16} defaultValue={state.article}></textarea>
-        </div>
+              <div className="form-group">
+                <label htmlFor="submit-article-article">Article</label>
+                <textarea id="submit-article-article" className="article form-control" ref="article" rows={16} defaultValue={state.article}></textarea>
+              </div>
 
-        <button type="submit" className="btn btn-default" style={{marginRight: "5px"}}>Submit</button>
-        <button className="btn btn-danger" onClick={this.applyOrder.bind(this)}>Pronunciation</button>
-        </form>
+              <button type="submit" className="btn btn-default" style={{marginRight: "5px"}}>Submit</button>
+              <button className="btn btn-danger" onClick={this.applyOrder.bind(this)}>Pronunciation</button>
+            </form>
 
+          </div>
         </div>
-        </div>
-        </div>
+      </div>
     );
   }
 }

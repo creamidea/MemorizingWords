@@ -20,11 +20,11 @@ class File extends React.Component {
     let props = this.props;
     let {filename, size, date} = props;
     return (
-      <li>
+        <li>
         <strong style={{marginRight: "10px"}}><a onClick={this.handleClick.bind(this)} href="javascript:void(0)">{filename}</a></strong>
         <span style={{marginRight: "10px"}}>{size}B</span>
         <span>{date}</span>
-      </li>
+        </li>
     );
   }
 }
@@ -43,14 +43,14 @@ class Definitions extends Component {
       let list = [];
       for (let [defIndex,def] of d[1].entries()) {
         list.push((
-          <li key={defIndex}><p>{def[0]}</p><p style={{color: "#777"}}>{def[2]}</p></li>
+            <li key={defIndex}><p>{def[0]}</p><p style={{color: "#777"}}>{def[2]}</p></li>
         ));
       }
       container.push((
-        <div key={dIndex}>
+          <div key={dIndex}>
           <p>{d[0]}</p>
           <ul>{list}</ul>
-        </div>
+          </div>
       ));
     }
     return (<div>{container}</div>);
@@ -64,14 +64,14 @@ class Synonyms extends Component {
       let list = [];
       for (var [sIndex, syn] of d[1].entries()) {
         list.push((
-          <li key={sIndex}>{syn[0].join(', ')}</li>
+            <li key={sIndex}>{syn[0].join(', ')}</li>
         ));
       }
       container.push((
-        <div key={dIndex}>
+          <div key={dIndex}>
           <p>{d[0]}</p>
           <ul>{list}</ul>
-        </div>
+          </div>
       ));
     }
     return (<div>{container}</div>);
@@ -85,10 +85,10 @@ class Examples extends Component {
       container.push((<p key={eIndex}>{exm[0]}</p>));
     }
     return (
-      <div>
+        <div>
         <button style={{marginBottom: "6px"}} className="btn btn-primary" data-toggle="collapse" href="#translate-examples" aria-expanded="false" aria-controls="translate-examples">See more.</button>
         <div className="collapse" id="translate-examples"><div className="well">{container}</div></div>
-      </div>);
+        </div>);
   }
 }
 
@@ -130,7 +130,7 @@ class Translation extends React.Component {
     }
 
     return (
-      <div style={{display: display, marginTop: marginTop - 168 + 'px', transition: "all 0.44s"}}>
+        <div style={{display: display, marginTop: marginTop - 168 + 'px', transition: "all 0.44s"}}>
         <p>一天不学习，浑身就难受。</p>
         <p>I prefer to die if I don't study at a day.</p>
         <div>
@@ -310,6 +310,10 @@ export default class WordsTest extends Fetch(React.Component) {
   // get the content or filenames you create
   getWordsListContent () {
     this.fetch(`/words-test/content`).then( ((files) => {
+      if (typeof files === 'string') {
+        this.setState({files: files});
+        return;
+      }
       let _d = [];
       for (let [index, file] of files.entries()) {
         let _f = file.split(/\s+/);

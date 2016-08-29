@@ -1,6 +1,7 @@
 "use strict";
 
-const fs = require('fs'),
+const os = require('os'),
+      fs = require('fs'),
       child_process = require('child_process'),
       path = require('path');
 const router = require('koa-router')();
@@ -29,6 +30,11 @@ router.prefix('/words-test');
 
 router.get('/content', function *(next) {
   let files = [];
+  // Now, just support linux
+  if (/windows/i.test(os.type())) {
+    this.body = "Now, just support for linux.";
+    return;
+  }
   try {
     let dirText = yield exec('ls -al', {cwd: DB_PATH});
     for(var file of dirText.split(/\r?\n/)) {
