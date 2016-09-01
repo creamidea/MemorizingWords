@@ -1,19 +1,19 @@
-"use strict";
+'use strict'
 
-const router = require('koa-router')();
+const router = require('koa-router')()
 
-router.prefix('/server-status');
+router.prefix('/server-status')
 
 router.get('/time', function * () {
-  let timestamp = 0;
+  let timestamp = 0
   try {
-    timestamp = Date.now();
+    timestamp = Date.now()
   } catch (err) {
-    this.statusCode = 500;
-    this.body = err.message;
-    return;
+    this.statusCode = 500
+    this.body = err.message
+    return
   }
-  this.body = {data: timestamp};
-});
+  this.body = {data: timestamp}
+})
 
-module.exports = router;
+module.exports = router

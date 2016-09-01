@@ -1,7 +1,7 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import WordsTest from './words-test';
-import ServerStatus from './server-status';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import WordsTest from './words-test'
+import ServerStatus from './server-status'
 
 ReactDOM.render(
   <div>
@@ -11,7 +11,7 @@ ReactDOM.render(
     <ServerStatus />
   </div>,
   document.getElementById('server-status')
-);
+)
 
 ReactDOM.render(
   <div>
@@ -21,4 +21,4 @@ ReactDOM.render(
     <WordsTest />
   </div>,
   document.getElementById('words-test')
-);
+)
